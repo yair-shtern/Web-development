@@ -1,0 +1,158 @@
+<%- include("header.ejs") %>
+    <form action="/updateRecipe" method="POST">
+        <input type="hidden" name="originalRecipeName" value="<%= recipe.recipeName %>" />
+        <div class="modal modal-sheet dark-background d-block p-4 py-md-5 align-items-center" tabindex="-1"
+            role="dialog" id="modalSheet">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-header border-bottom-0">
+                        <div class="modal-title fs-5 pl">
+                            <label for="recipeName" class="form-label">Recipe name</label>
+                            <input type="text" class="form-control" id="recipeName" name="recipeName" placeholder=""
+                                value="<%= recipe.recipeName %>" required="">
+                        </div>
+                    </div>
+                    <div class="modal-body py-0">
+                        <!-- Ingredients section -->
+                        <div class="col-12">
+                            <label for="ingredients" class="form-label">Ingredients</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ingredients" placeholder="Enter ingredient">
+                                <button type="button" class="btn btn-secondary" id="addIngredientBtn"><i
+                                        class="bi bi-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label for="ingredientList" class="form-label">List of Ingredients</label>
+                            <ul id="ingredientList" class="list-group">
+                                <% recipe.ingredients.forEach((ingredient, index)=> { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <%= ingredient %>
+                                            <button type="button" class="btn btn-danger btn-sm ms-2"
+                                                onclick="removeIngredient(this)"><i class="bi bi-x"></i></button>
+                                    </li>
+                                    <% }) %>
+                            </ul>
+                            <input type="hidden" name="ingredients" id="ingredientsInput"
+                                value="<%= JSON.stringify(recipe.ingredients) %>">
+                        </div>
+
+                        <!-- Instructions section -->
+                        <div class="col-12 mt-3">
+                            <label for="instructions" class="form-label">Instructions</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="instructions"
+                                    placeholder="Enter instruction">
+                                <button type="button" class="btn btn-primary" id="addInstructionBtn"><i
+                                        class="bi bi-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label for="instructionList" class="form-label">List of Instructions</label>
+                            <ul id="instructionList" class="list-group">
+                                <% recipe.instructions.forEach((instruction, index)=> { %>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <%= instruction %>
+                                            <button type="button" class="btn btn-danger btn-sm ms-2"
+                                                onclick="removeInstruction(this)"><i class="bi bi-x"></i></button>
+                                    </li>
+                                    <% }) %>
+                            </ul>
+                            <input type="hidden" name="instructions" id="instructionsInput"
+                                value="<%= JSON.stringify(recipe.instructions) %>">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                        <button type="submit" class="btn btn-lg btn-secondary text-light">Save
+                            changes</button>
+                        <a href="/home" class="btn btn-lg btn-outline-secondary" data-bs-dismiss="modal">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            function addIngredient() {
+                const ingredient = $('#ingredients').val().trim();
+                if (ingredient !== '') {
+                    const listItem = `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${ingredient}
+                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeIngredient(this)"><i class="bi bi-x"></i></button>
+                    </li>`;
+                    $('#ingredientList').append(listItem);
+                    $('#ingredients').val('');
+                    updateIngredientsInput();
+                }
+            }
+
+            function addInstruction() {
+                const instruction = $('#instructions').val().trim();
+                if (instruction !== '') {
+                    const listItem = `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        ${instruction}
+                        <button type="button" class="btn btn-danger btn-sm ms-2" onclick="removeInstruction(this)"><i class="bi bi-x"></i></button>
+                    </li>`;
+                    $('#instructionList').append(listItem);
+                    $('#instructions').val('');
+                    updateInstructionsInput();
+                }
+            }
+
+            $('#addIngredientBtn').click(addIngredient);
+            $('#addInstructionBtn').click(addInstruction);
+
+            $('#ingredients').keypress(function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    addIngredient();
+                }
+            });
+
+            $('#instructions').keypress(function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    addInstruction();
+                }
+            });
+
+            updateIngredientsInput();
+            updateInstructionsInput();
+        });
+
+        function removeIngredient(button) {
+            $(button).closest('li').remove();
+            updateIngredientsInput();
+        }
+
+        function removeInstruction(button) {
+            $(button).closest('li').remove();
+            updateInstructionsInput();
+        }
+
+        function updateIngredientsInput() {
+            const ingredients = $('#ingredientList').find('li').map(function () {
+                return $(this).contents().filter(function () {
+                    return this.nodeType === 3;
+                }).text().trim();
+            }).get();
+            $('#ingredientsInput').val(JSON.stringify(ingredients));
+        }
+
+        function updateInstructionsInput() {
+            const instructions = $('#instructionList').find('li').map(function () {
+                return $(this).contents().filter(function () {
+                    return this.nodeType === 3;
+                }).text().trim();
+            }).get();
+            $('#instructionsInput').val(JSON.stringify(instructions));
+        }
+    </script>

@@ -1,0 +1,99 @@
+<%- include("header.ejs") %>
+    <form action="/saveRecipe" method="POST">
+        <div class="modal modal-sheet dark-background d-block p-4 py-md-5 align-items-center" tabindex="-1"
+            role="dialog" id="modalSheet">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content rounded-4 shadow">
+                    <div class="modal-header border-bottom-0">
+                        <div class="modal-title fs-5 pl">
+                            <label for="recipeName" class="form-label">Recipe name</label>
+                            <input type="text" class="form-control" id="recipeName" name="recipeName" placeholder=""
+                                value="" required="">
+                        </div>
+                    </div>
+                    <div class="modal-body py-0">
+                        <div class="col-12">
+                            <label for="ingredients" class="form-label">Ingredients</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="ingredients" placeholder="Enter ingredient">
+                                <button type="button" class="btn btn-secondary" id="addIngredientBtn"><i
+                                        class="bi bi-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label for="ingredientList" class="form-label">List of Ingredients</label>
+                            <ul id="ingredientList" class="list-group">
+                                <!-- Ingredients will be added dynamically -->
+                            </ul>
+                            <input type="hidden" name="ingredients" id="ingredientsInput" />
+                        </div>
+
+                        <div class="col-12">
+                            <label for="instructions" class="form-label">Instructions</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="instructions"
+                                    placeholder="Enter instruction">
+                                <button type="button" class="btn btn-primary" id="addInstructionBtn"><i
+                                        class="bi bi-plus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <label for="instructionList" class="form-label">List of Instructions</label>
+                            <ol id="instructionList">
+                                <!-- Instructions will be added dynamically -->
+                            </ol>
+                            <input type="hidden" name="instructions" id="instructionsInput" />
+                        </div>
+
+                    </div>
+                    <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0">
+                        <button type="submit" class="btn btn-lg dark-background btn-light text-light">Save
+                            changes</button>
+                        <a href="/home" class="btn btn-lg btn-outline-secondary" data-bs-dismiss="modal">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.0/font/bootstrap-icons.min.css"
+        rel="stylesheet">
+    <script>
+        $(document).ready(function () {
+            $('#addIngredientBtn').click(function () {
+                const ingredient = $('#ingredients').val().trim();
+                $('#ingredients').val('');
+                if (ingredient !== '') {
+                    const listItem = `<li class="list-group-item">${ingredient}</li>`;
+                    $('#ingredientList').append(listItem);
+                    updateIngredientsInput();
+                }
+            });
+
+            $('#addInstructionBtn').click(function () {
+                const instruction = $('#instructions').val().trim();
+                $('#instructions').val('');
+                if (instruction !== '') {
+                    const listItem = `<li>${instruction}</li>`;
+                    $('#instructionList').append(listItem);
+                    updateInstructionsInput();
+                }
+            });
+
+            function updateIngredientsInput() {
+                const ingredients = $('#ingredientList').find('li').map(function () {
+                    return $(this).text().trim();
+                }).get();
+                $('#ingredientsInput').val(JSON.stringify(ingredients));
+            }
+
+            function updateInstructionsInput() {
+                const instructions = $('#instructionList').find('li').map(function () {
+                    return $(this).text().trim();
+                }).get();
+                $('#instructionsInput').val(JSON.stringify(instructions));
+            }
+        });
+    </script>

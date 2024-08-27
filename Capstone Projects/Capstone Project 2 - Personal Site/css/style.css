@@ -1,0 +1,10 @@
+.cardo {
+    font-family: "Cardo", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+.feature-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: .75rem;
+  }

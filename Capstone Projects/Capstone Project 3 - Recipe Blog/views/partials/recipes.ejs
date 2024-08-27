@@ -1,0 +1,47 @@
+<%- include("header.ejs") %>
+    <%- include("navbar.ejs", { activePage: "recipes" }) %>
+
+        <div class="px-4 py-5 text-center border-bottom">
+            <div class="container">
+                <h1 class="headline mb-4">Recipes</h1>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    <% recipes.forEach(recipe=> { %>
+                        <div class="col">
+                            <div class="card shadow-lg">
+                                <div class="card-body">
+                                    <h2 class="card-title mb-3">
+                                        <a href="/recipe/<%= recipe.recipeName %>">
+                                            <%= recipe.recipeName %>
+                                        </a>
+                                    </h2>
+
+                                    <div class="mb-4">
+                                        <h5 class="mb-3"><strong>Ingredients:</strong></h5>
+                                        <ul class="list-group">
+                                            <% recipe.ingredients.forEach(ingredient=> { %>
+                                                <li class="list-group-item no-border">
+                                                    <%= ingredient %>
+                                                </li>
+                                                <% }) %>
+                                        </ul>
+                                    </div>
+
+                                    <div>
+                                        <h5 class="mb-3"><strong>Instructions:</strong></h5>
+                                        <ol class="list-group">
+                                            <% recipe.instructions.forEach((instruction, index)=> { %>
+                                                <li class="list-group-item no-border">
+                                                    <%= `${index + 1}. ${instruction.trim()}` %>
+                                                </li>
+                                                <% }) %>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+        </div>
+
+        <%- include("footer.ejs") %>

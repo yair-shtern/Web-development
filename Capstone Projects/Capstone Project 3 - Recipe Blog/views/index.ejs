@@ -1,0 +1,27 @@
+<%- include("partials/header.ejs") %>
+
+    <div class="container-fluid dark-background full-height d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <% if(locals.adj && locals.noun){ %>
+                <h1 class="mb-4">
+                    <%= adj %>
+                        <%= noun %>
+                </h1>
+                <% } else { %>
+                    <h1 class="mb-4 headline">Welcome to the Shtern family recipe blog 🤟</h1>
+                    <% } %>
+                        <form action="/home" method="POST" class="mt-4">
+                            <div class="mb-3 d-flex justify-content-center">
+                                <input type="text" class="form-control" name="fName" placeholder="First name">
+                            </div>
+                            <div class="mb-3 d-flex justify-content-center">
+                                <input type="text" class="form-control" name="lName" placeholder="Last name">
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                        </form>
+        </div>
+    </div>
+
+    <%- include("partials/footer.ejs") %>

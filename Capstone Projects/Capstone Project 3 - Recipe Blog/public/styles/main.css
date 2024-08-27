@@ -1,0 +1,22 @@
+.dark-background{
+    background-color: rgb(65, 95, 120);
+}
+
+.headline{
+    font-family: cursive
+}
+
+.no-border {
+    border: none;
+}
+
+html, body {
+    height: 100%;
+}
+.full-height {
+    min-height: 100vh;
+}
+.form-control {
+    width: 300px;
+    max-width: 100%;
+}
